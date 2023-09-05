@@ -15,6 +15,7 @@ chmod +x update_conf.sh
 '
 
 ###################################################################################################
+sudo -v
 
 echo "Hledam slozky, pokud nejsou vytvorim je..."
 if [ ! -d "$CONFIG_FOLDER" ]; then
@@ -31,8 +32,8 @@ echo "Hotovo"
 echo "Vytvarim aktualizacni skript"
 if [ ! -d "$HOOKS_FOLDER/post-merge" ]; then
 cd "$HOOKS_FOLDER"
-echo "$hook" |  tee /home/pi/PWS/PWS_400K_CZ/.git/hooks/post-merge > /dev/null
-chmod +x post-merge
+sudo echo "$hook" |  tee /home/pi/PWS/PWS_400K_CZ/.git/hooks/post-merge > /dev/null
+sudo chmod +x post-merge
 fi
 echo "Hotovo"
 
@@ -44,7 +45,7 @@ rm printer.cfg moonraker.cfg
 cp /home/pi/PWS/PWS_400K_CZ/printer.cfg /home/pi/printer_data/config/
 cp /home/pi/PWS/PWS_400K_CZ/moonraker.conf /home/pi/printer_data/config/
 cp /home/pi/PWS/PWS_400K_CZ/konfigurace/* /home/pi/printer_data/config/PWS_config/
-service klipper restart
+sudo service klipper restart
 
 ###################################################################################################
 
