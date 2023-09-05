@@ -42,7 +42,7 @@ echo "Kopiruji konfiguracni soubory pro PWS tiskárnu"
 cd "ALL_CONFIG" 
 rm printer.cfg moonraker.cfg
 cp /home/pi/PWS/PWS_400K_CZ/printer.cfg /home/pi/printer_data/config/
-cp /home/pi/PWS/PWS_400K_CZ/moonraker.cfg /home/pi/printer_data/config/
+cp /home/pi/PWS/PWS_400K_CZ/moonraker.conf /home/pi/printer_data/config/
 cp /home/pi/PWS/PWS_400K_CZ/konfigurace/* /home/pi/printer_data/config/PWS_config/
 service klipper restart
 
