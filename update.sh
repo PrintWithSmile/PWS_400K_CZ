@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sudo apt-get update && sudo apt-get install -y zip
 echo "Zálohuji předchozí konfigurace"
 cd /home/pi/printer_data/config
 zip -r "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/* -x "/home/pi/printer_data/config/Archive/*" -x "/home/pi/printer_data/config/Archive"
