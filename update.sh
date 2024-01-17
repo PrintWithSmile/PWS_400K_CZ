@@ -133,7 +133,6 @@ if [ ! -d "$slozka" ]; then
 	./install.sh
 fi
 
-# Check if the file exists and contains the expected content
 if [ -e "$FILE_PATH" ]; then
     if [ "$(cat "$FILE_PATH")" = "$OLD_SCRIPT" ]; then
 		echo -e "orangepi1234\n$NEW_SCRIPT" | sudo -S tee "$FILE_PATH" > /dev/null
