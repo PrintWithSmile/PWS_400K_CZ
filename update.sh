@@ -1,35 +1,5 @@
 #!/bin/bash
-
-if ! command -v zip &> /dev/null; then
-    sudo apt-get update
-    sudo apt-get install zip -y
-
-    if [ $? -eq 0 ]; then
-        echo "ZIP utility installed successfully."
-    else
-        echo "Failed to install ZIP utility."
-        exit 1
-    fi
-fi
-
-
-slozka="/home/pi/Klipper_IP"
-
-if [ ! -d "$slozka" ]; then
-    git clone https://github.com/PrintWithSmile/Klipper_IP.git
-	cd Klipper_IP
-	chmod +x install.sh
-	./install.sh
-fi
-
-echo "Zálohuji předchozí konfigurace"
-cd /home/pi/printer_data/config
-zip -r "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/* -x "/home/pi/printer_data/config/Archive/*" -x "/home/pi/printer_data/config/Archive"
-mv "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/Archive
-cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_config/
-
 FILE_PATH="/var/lib/pws/mountflash"
-
 NEW_SCRIPT="#!/bin/bash
 
 FLASH_DISK=\"/media/wifi\"
@@ -121,14 +91,49 @@ cleanup
 echo \"Script completed successfully.\"
 "
 
+if ! command -v zip &> /dev/null; then
+    sudo apt-get update
+    sudo apt-get install zip -y
+
+    if [ $? -eq 0 ]; then
+        echo "ZIP utility installed successfully."
+    else
+        echo "Failed to install ZIP utility."
+        exit 1
+    fi
+fi
+
+
+slozka="/home/pi/Klipper_IP"
+
+if [ ! -d "$slozka" ]; then
+    git clone https://github.com/PrintWithSmile/Klipper_IP.git
+	cd Klipper_IP
+	chmod +x install.sh
+	./install.sh
+fi
+
+echo "Zálohuji předchozí konfigurace"
+cd /home/pi/printer_data/config
+zip -r "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/* -x "/home/pi/printer_data/config/Archive/*" -x "/home/pi/printer_data/config/Archive"
+mv "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/Archive
+cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_config/
+
 # Check if the file exists and contains the expected content
-if [ -e "$FILE_PATH" ] && [ "$(cat "$FILE_PATH")" = "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" ]; then
-    echo "Replacing the content of $FILE_PATH..."
-    sudo echo -e "$NEW_SCRIPT" > "$FILE_PATH"
-    sudo chmod +x "$FILE_PATH"
-    echo "Content replaced successfully."
+if [ -e "$FILE_PATH" ]; then
+    if [ "$(cat "$FILE_PATH")" = "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" ]; then
+        echo "Replacing the content of $FILE_PATH..."
+        echo -e "$NEW_SCRIPT" > "$FILE_PATH"
+        chmod +x "$FILE_PATH"
+        echo "Content replaced successfully."
+    else
+        echo "Error: The file $FILE_PATH exists but does not contain the expected content."
+    fi
 else
-    echo "Error: The file $FILE_PATH does not exist or does not contain the expected content."
+    # If the file does not exist, create it with the initial content
+    echo -e "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" > "$FILE_PATH"
+    chmod +x "$FILE_PATH"
+    echo "File $FILE_PATH created with the initial content."
 fi
 
 
