@@ -109,7 +109,7 @@ cleanup
 echo \"Script completed successfully.\"
 "
 
-NEW_SCRIPT2="KERNEL==""sda1"", SUBSYSTEMS==""usb"", ACTION==""add"", RUN+=""/var/lib/pws/mountflash"", SYMLINK+=""usbflash"""
+NEW_SCRIPT2='KERNEL=="sda1", SUBSYSTEMS=="usb", ACTION=="add", RUN+="/var/lib/pws/mountflash", SYMLINK+="usbflash"'
 
 if ! command -v zip &> /dev/null; then
     sudo apt-get update
@@ -149,13 +149,13 @@ fi
 if [ -e "$FILE_PATH2" ]; then
     if [ "$(cat "$FILE_PATH2")" = "$OLD_SCRIPT2" ]; then
         echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
-		echo -e "orangepi1234" | sudo -S sh -c "echo '$NEW_SCRIPT2' > '$FILE_PATH2'"
+		echo -e "orangepi1234" | sudo -S sh -c "echo \"$NEW_SCRIPT2\" > '$FILE_PATH2'"
 		echo -e "orangepi1234\n" | sudo -S rm /var/lib/pws/unmountflash
 		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
 		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
     else
 		echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
-		echo -e "orangepi1234" | sudo -S sh -c "echo '$NEW_SCRIPT2' > '$FILE_PATH2'"
+		echo -e "orangepi1234" | sudo -S sh -c "echo \"$NEW_SCRIPT2\" > '$FILE_PATH2'"
 		echo -e "orangepi1234\n" | sudo -S rm /var/lib/pws/unmountflash
 		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
 		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
