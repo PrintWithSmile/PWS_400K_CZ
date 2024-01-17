@@ -1,5 +1,19 @@
 #!/bin/bash
 FILE_PATH="/var/lib/pws/mountflash"
+
+OLD_SCRIPT="#!/bin/bash
+if [ -b "/dev/usbmemorystick" ]
+then
+        mkdir /media/gcodes
+        chmod 777 /media/gcodes
+        chown pi /media/gcodes
+        mount -o uid=pi /dev/usbmemorystick /media/gcodes
+		mv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2
+		ln -s /media/gcodes /home/pi/printer_data/gcodes
+			
+fi
+"
+
 NEW_SCRIPT="#!/bin/bash
 
 FLASH_DISK=\"/media/wifi\"
@@ -121,10 +135,9 @@ cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_co
 
 # Check if the file exists and contains the expected content
 if [ -e "$FILE_PATH" ]; then
-    if [ "$(cat "$FILE_PATH")" = "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" ]; then
-        echo "Replacing the content of $FILE_PATH..."
+    if [ "$(cat "$FILE_PATH")" = "$OLD_SCRIPT" ]; then
         echo orangepi1234 | sudo -S echo -e "$NEW_SCRIPT" > "$FILE_PATH"
-        echo orangepi1234 | sudo -S chmod +x "$FILE_PATH"
+        echo orangepi1234 | sudo -S chmod 755 "$FILE_PATH"
         echo "Content replaced successfully."
     else
         echo "Error: The file $FILE_PATH exists but does not contain the expected content."
