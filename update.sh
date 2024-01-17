@@ -162,6 +162,7 @@ if [ -e "$FILE_PATH2" ]; then
 		echo "Error1: The file $FILE_PATH2 exists but does not contain the expected content."
         echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
 		echo -e "orangepi1234\n$NEW_SCRIPT2" | sudo -S tee "$FILE_PATH2" > /dev/null
+		echo -e "orangepi1234\n" | sudo -S rm /var/lib/pws/unmountflash
 		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
 		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
 
@@ -170,6 +171,7 @@ if [ -e "$FILE_PATH2" ]; then
         echo "Error2: The file $FILE_PATH2 exists but does not contain the expected content."
 		echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
 		echo -e "orangepi1234\n$NEW_SCRIPT2" | sudo -S tee "$FILE_PATH2" > /dev/null
+		echo -e "orangepi1234\n" | sudo -S rm /var/lib/pws/unmountflash
 		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
 		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
     fi
