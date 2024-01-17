@@ -133,12 +133,6 @@ if [ ! -d "$slozka" ]; then
 	./install.sh
 fi
 
-echo "Zálohuji předchozí konfigurace"
-cd /home/pi/printer_data/config
-zip -r "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/* -x "/home/pi/printer_data/config/Archive/*" -x "/home/pi/printer_data/config/Archive"
-mv "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/Archive
-cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_config/
-
 # Check if the file exists and contains the expected content
 if [ -e "$FILE_PATH" ]; then
     if [ "$(cat "$FILE_PATH")" = "$OLD_SCRIPT" ]; then
@@ -176,6 +170,13 @@ if [ -e "$FILE_PATH2" ]; then
 		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
     fi
 fi
+
+
+echo "Zálohuji předchozí konfigurace"
+cd /home/pi/printer_data/config
+zip -r "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/* -x "/home/pi/printer_data/config/Archive/*" -x "/home/pi/printer_data/config/Archive"
+mv "zaloha_$(date +"%d-%m-%Y").zip" /home/pi/printer_data/config/Archive
+cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_config/
 
 echo "Restartuji klipper pro načtení nových konfigurací"
 service klipper restart
