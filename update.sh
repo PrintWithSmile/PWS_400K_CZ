@@ -141,6 +141,9 @@ if [ -e "$FILE_PATH" ]; then
         echo "Content replaced successfully."
     else
         echo "Error: The file $FILE_PATH exists but does not contain the expected content."
+		echo orangepi1234 | sudo -S echo -e "$NEW_SCRIPT" > "$FILE_PATH"
+        echo orangepi1234 | sudo -S chmod 755 "$FILE_PATH"
+        echo "Content replaced successfully."
     fi
 else
     # If the file does not exist, create it with the initial content
