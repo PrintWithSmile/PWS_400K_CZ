@@ -141,3 +141,4 @@ echo "Restartuji klipper pro načtení nových konfigurací"
 service klipper restart
 
 echo "Update hotový"
+ 
