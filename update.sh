@@ -109,7 +109,7 @@ cleanup
 echo \"Script completed successfully.\"
 "
 
-NEW_SCRIPT2="KERNEL=="sda1", SUBSYSTEMS=="usb", ACTION=="add", RUN+="/var/lib/pws/mountflash", SYMLINK+="usbflash""
+NEW_SCRIPT2="KERNEL==""sda1"", SUBSYSTEMS==""usb"", ACTION==""add"", RUN+=""/var/lib/pws/mountflash"", SYMLINK+=""usbflash"""
 
 if ! command -v zip &> /dev/null; then
     sudo apt-get update
