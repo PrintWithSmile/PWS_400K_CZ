@@ -145,7 +145,7 @@ if [ -e "$FILE_PATH" ]; then
         echo "Content replaced successfully."
     fi
 fi
-
+ 
 if [ -e "$FILE_PATH2" ]; then
     if [ "$(cat "$FILE_PATH2")" = "$OLD_SCRIPT2" ]; then
         echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
