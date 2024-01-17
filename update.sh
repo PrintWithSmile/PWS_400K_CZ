@@ -124,8 +124,8 @@ echo \"Script completed successfully.\"
 # Check if the file exists and contains the expected content
 if [ -e "$FILE_PATH" ] && [ "$(cat "$FILE_PATH")" = "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" ]; then
     echo "Replacing the content of $FILE_PATH..."
-    echo -e "$NEW_SCRIPT" > "$FILE_PATH"
-    chmod +x "$FILE_PATH"
+    sudo echo -e "$NEW_SCRIPT" > "$FILE_PATH"
+    sudo chmod +x "$FILE_PATH"
     echo "Content replaced successfully."
 else
     echo "Error: The file $FILE_PATH does not exist or does not contain the expected content."
