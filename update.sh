@@ -1,6 +1,8 @@
 #!/bin/bash
 FILE_PATH="/var/lib/pws/mountflash"
 
+FILE_PATH2="/etc/udev/rules.d/10-flash.rules"
+
 OLD_SCRIPT="#!/bin/bash
 if [ -b "/dev/usbmemorystick" ]
 then
@@ -11,8 +13,10 @@ then
 		mv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2
 		ln -s /media/gcodes /home/pi/printer_data/gcodes
 			
-fi
-"
+fi"
+
+OLD_SCRIPT2="KERNEL=="sda1", SUBSYSTEMS=="usb", ACTION=="add", RUN+="/var/lib/pws/mountflash", SYMLINK+="usbmemorystick"
+KERNEL=="sda1", SUBSYSTEMS=="usb", ACTION=="remove", RUN+="/var/lib/pws/unmountflash""
 
 NEW_SCRIPT="#!/bin/bash
 
@@ -105,6 +109,8 @@ cleanup
 echo \"Script completed successfully.\"
 "
 
+NEW_SCRIPT2="KERNEL=="sda1", SUBSYSTEMS=="usb", ACTION=="add", RUN+="/var/lib/pws/mountflash", SYMLINK+="usbflash""
+
 if ! command -v zip &> /dev/null; then
     sudo apt-get update
     sudo apt-get install zip -y
@@ -136,22 +142,38 @@ cp -f /home/pi/PWS/PWS_400K_CZ/Konfigurace/* /home/pi/printer_data/config/PWS_co
 # Check if the file exists and contains the expected content
 if [ -e "$FILE_PATH" ]; then
     if [ "$(cat "$FILE_PATH")" = "$OLD_SCRIPT" ]; then
-        echo orangepi1234 | sudo -S echo -e "$NEW_SCRIPT" > "$FILE_PATH"
-        echo orangepi1234 | sudo -S chmod 755 "$FILE_PATH"
+		echo "ANO $FILE_PATH "
+        echo "Error1: The file $FILE_PATH exists but does not contain the expected content."
+		echo -e "orangepi1234\n$NEW_SCRIPT" | sudo -S tee "$FILE_PATH" > /dev/null
+        echo -e "orangepi1234\n" | sudo -S chmod 755 "$FILE_PATH"
         echo "Content replaced successfully."
     else
-        echo "Error: The file $FILE_PATH exists but does not contain the expected content."
+		echo "NE $FILE_PATH "
+        echo "Error2: The file $FILE_PATH exists but does not contain the expected content."
 		echo -e "orangepi1234\n$NEW_SCRIPT" | sudo -S tee "$FILE_PATH" > /dev/null
         echo -e "orangepi1234\n" | sudo -S chmod 755 "$FILE_PATH"
         echo "Content replaced successfully."
     fi
-else
-    # If the file does not exist, create it with the initial content
-    echo orangepi1234 | sudo -S echo -e "#!/bin/bash\nif [ -b \"/dev/usbmemorystick\" ]\nthen\n        mkdir /media/gcodes\n        chmod 777 /media/gcodes\n        chown pi /media/gcodes\n        mount -o uid=pi /dev/usbmemorystick /media/gcodes\n\tmv /home/pi/printer_data/gcodes /home/pi/printer_data/gcodes2\n\tln -s /media/gcodes /home/pi/printer_data/gcodes\n\t\nfi" > "$FILE_PATH"
-    echo orangepi1234 | sudo -S chmod +x "$FILE_PATH"
-    echo "File $FILE_PATH created with the initial content."
 fi
 
+if [ -e "$FILE_PATH2" ]; then
+    if [ "$(cat "$FILE_PATH2")" = "$OLD_SCRIPT2" ]; then
+		echo "ANO $FILE_PATH2 "
+		echo "Error1: The file $FILE_PATH2 exists but does not contain the expected content."
+        echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
+		echo -e "orangepi1234\n$NEW_SCRIPT2" | sudo -S tee "$FILE_PATH2" > /dev/null
+		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
+		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
+
+    else
+		echo "NE $FILE_PATH2 "
+        echo "Error2: The file $FILE_PATH2 exists but does not contain the expected content."
+		echo -e "orangepi1234\n" | sudo -S sh -c 'echo -n > "$FILE_PATH2"'
+		echo -e "orangepi1234\n$NEW_SCRIPT2" | sudo -S tee "$FILE_PATH2" > /dev/null
+		echo -e "orangepi1234\n" | sudo -S systemctl daemon-reload
+		echo -e "orangepi1234\n" | sudo -S systemctl restart systemd-udevd
+    fi
+fi
 
 echo "Restartuji klipper pro načtení nových konfigurací"
 service klipper restart
