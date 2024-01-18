@@ -1,4 +1,5 @@
 #!/bin/bash
+
 FILE_PATH="/var/lib/pws/mountflash"
 
 FILE_PATH2="/etc/udev/rules.d/10-flash.rules"
