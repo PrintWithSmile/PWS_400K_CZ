@@ -11,7 +11,7 @@ cd /home/pi/PWS
 chmod +x update_conf.sh 
 ./update_conf.sh
 
-
+ 
 sudo nano /home/pi/PWS/update_conf.sh
 
 xxxxx
