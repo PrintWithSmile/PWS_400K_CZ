@@ -1,6 +1,6 @@
 #!/bin/bash
 
-moonraker_file="~/printer_data/config/moonraker.conf"
+moonraker_file="/home/pi/printer_data/config/moonraker.conf"
 
 text="https://github.com/Spectoda/spectoda-bridge-pws400k.git"
 
@@ -28,7 +28,7 @@ fi
 
 if [ -f "$moonraker_file" ]; then
     if grep -q "$text" "$moonraker_file"; then
-        rm -r -f spectoda-bridge-pws400k/
+		rm -r -f spectoda-bridge-pws400k/
 		wait
 		git clone https://github.com/PrintWithSmile/spectoda-bridge-pws400k.git 
 		wait
@@ -37,9 +37,8 @@ if [ -f "$moonraker_file" ]; then
 		sed -i 's#https://github.com/Spectoda/spectoda-bridge-pws400k.git#https://github.com/PrintWithSmile/spectoda-bridge-pws400k.git#g' ~/printer_data/config/moonraker.conf
 		wait
 		systemctl restart spectoda-bridge-pws400k
-    fi
+	fi
 fi
-
 
 echo "Zálohuji předchozí konfigurace"
 
